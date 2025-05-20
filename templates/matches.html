@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Matches - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Matches</h1>
+    {% if current_user.role in ['admin', 'arbiter'] %}
+    <a href="{{ url_for('create_match') }}" class="btn btn-primary">Create New Match</a>
+    {% endif %}
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Hall</th>
+                <th>Table</th>
+                <th>Team 1</th>
+                <th>Team 2</th>
+                <th>Arbiter</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match_data in matches %}
+            <tr>
+                <td>{{ match_data.match.match_id }}</td>
+                <td>{{ match_data.match.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ match_data.match.time_slot.strftime('%H:%M') }}</td>
+                <td>{{ match_data.hall_name }}</td>
+                <td>{{ match_data.table_id }}</td>
+                <td>{{ match_data.team1_name }}</td>
+                <td>{{ match_data.team2_name }}</td>
+                <td>{{ match_data.match.arbiter_username }}</td>
+                <td>{{ match_data.match.ratings if match_data.match.ratings else 'Not rated' }}</td>
+                <td>
+                    {% if current_user.role in ['admin', 'arbiter'] %}
+                        {% if not match_data.match.match_assignments %}
+                        <a href="{{ url_for('assign_players', match_id=match_data.match.match_id) }}" class="btn btn-sm btn-info">Assign Players</a>
+                        {% endif %}
+                        {% if current_user.username == match_data.match.arbiter_username and not match_data.match.ratings %}
+                        <a href="{{ url_for('submit_rating', match_id=match_data.match.match_id) }}" class="btn btn-sm btn-success">Rate Match</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

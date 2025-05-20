@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to Chess Tournament Management</h1>
+    <p class="lead">Manage your chess tournaments, matches, and players efficiently.</p>
+    <hr class="my-4">
+    {% if current_user.is_authenticated %}
+        <p>You are logged in as {{ current_user.username }} ({{ current_user.role }})</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('matches') }}" role="button">View Matches</a>
+    {% else %}
+        <p>Please log in to access the tournament management features.</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
+    {% endif %}
+</div>
+{% endblock %} 
