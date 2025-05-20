@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Halls - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Manage Halls</h1>
+        <a href="{{ url_for('manager_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Hall ID</th>
+                    <th>Current Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hall in halls %}
+                <tr>
+                    <td>{{ hall.hall_id }}</td>
+                    <td>
+                        <form method="POST" class="d-inline">
+                            <input type="hidden" name="hall_id" value="{{ hall.hall_id }}">
+                            <div class="input-group">
+                                <input type="text" name="hall_name" class="form-control" value="{{ hall.hall_name }}" required>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% for hall in halls %}
+<!-- Modal for viewing matches in each hall -->
+
+{% endfor %}
+{% endblock %} 

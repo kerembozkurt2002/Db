@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Player Dashboard - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>Player Dashboard</h1>
+            <p class="lead">Welcome, {{ current_user.username }}</p>
+            {# Display player's current ELO if available #}
+            {% if player and player.elorating is not none %}
+                <p>Current ELO: {{ player.elorating }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Your Matches</h5>
+                    <div class="list-group">
+                        <a href="{{ url_for('player_matches') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-chess"></i> View Match History
+                        </a>
+                         <a href="{{ url_for('player_opponents') }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-users"></i> View Opponents
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Rest of the content remains unchanged -->
+        </div>
+    </div>
+</div>
+{% endblock %} 

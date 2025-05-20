@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Match History - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Match History</h1>
+        <a href="{{ url_for('player_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    <!-- Statistics Summary -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Matches</h5>
+                    <p class="card-text display-4">{{ total_matches }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Wins</h5>
+                    <p class="card-text display-4">{{ wins }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Draws</h5>
+                    <p class="card-text display-4">{{ draws }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Losses</h5>
+                    <p class="card-text display-4">{{ losses }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win Rate -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Win Rate</h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ win_rate }}%">
+                            {{ "%.1f"|format(win_rate) }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match History Table -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Match Details</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Hall</th>
+                            <th>Table</th>
+                            <th>Team 1</th>
+                            <th>Team 2</th>
+                            <th>Your Color</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for match in matches %}
+                        <tr>
+                            <td>{{ match.date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ match.formatted_time }}</td>
+                            <td>{{ match.hall_name }}</td>
+                            <td>{{ match.table_id }}</td>
+                            <td>{{ match.team1_name }}</td>
+                            <td>{{ match.team2_name }}</td>
+                            <td>
+                                {% if match.white_player == current_user.username %}
+                                    <span class="badge bg-light text-dark">White</span>
+                                {% else %}
+                                    <span class="badge bg-dark">Black</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if match.result == 'white wins' and match.white_player == current_user.username %}
+                                    <span class="badge bg-success">Win</span>
+                                {% elif match.result == 'black wins' and match.black_player == current_user.username %}
+                                    <span class="badge bg-success">Win</span>
+                                {% elif match.result == 'draw' %}
+                                    <span class="badge bg-warning">Draw</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Loss</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

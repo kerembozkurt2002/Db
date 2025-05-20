@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Your Opponents - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Opponents You've Played Against</h1>
+    
+    {% if most_frequent_opponent_elo is not none and most_frequent_opponent_elo != 'No opponents' %}
+    <div class="card mb-4">
+        <div class="card-header">
+            Most Frequent Opponent ELO
+        </div>
+        <div class="card-body text-center">
+            <h3 class="card-text">{{ most_frequent_opponent_elo }}</h3>
+        </div>
+    </div>
+    {% elif most_frequent_opponent_elo == 'No opponents' %}
+     <div class="card mb-4">
+        <div class="card-header">
+            Most Frequent Opponent ELO
+        </div>
+        <div class="card-body text-center">
+            <h3 class="card-text">No opponents played yet</h3>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <div class="card-body">
+            {% if opponents %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Opponent Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for opponent in opponents %}
+                        <tr>
+                            <td>{{ opponent.Opponent }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">You haven't played against any opponents yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{{ url_for('player_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %} 

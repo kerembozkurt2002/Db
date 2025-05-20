@@ -3,51 +3,88 @@
 {% block title %}Assign Players - Chess Tournament Management{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">Assign Players to Match #{{ match_id }}</h2>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('assign_players', match_id=match_id) }}">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="white_player" class="form-label">White Player (Team 1)</label>
-                            <select class="form-select" id="white_player" name="white_player" required>
-                                <option value="">Select white player</option>
-                                {% for player in team1_players %}
-                                <option value="{{ player.username }}">{{ player.username }} (ELO: {{ player.elorating }})</option>
-                                {% endfor %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>Assign Players</h1>
+            <p class="lead">Assign players for match on {{ match.date.strftime('%Y-%m-%d') }} at {{ match.formatted_time }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('assign_players', match_id=match_id) }}">
+                        <div class="mb-3">
+                            <label class="form-label">Match Details</label>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <p class="mb-1"><strong>Hall:</strong> {{ match.hall_name }}</p>
+                                    <p class="mb-1"><strong>Table:</strong> {{ match.table_id }}</p>
+                                    <p class="mb-1"><strong>Teams:</strong> {{ match.team1_name }} vs {{ match.team2_name }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="white_player" class="form-label">White Player (Team 1)</label>
+                                <select class="form-select" id="white_player" name="white_player" required>
+                                    <option value="">Select white player</option>
+                                    {% for player in team1_players %}
+                                    <option value="{{ player.username }}">{{ player.username }} (ELO: {{ player.elorating }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="black_player" class="form-label">Black Player (Team 2)</label>
+                                <select class="form-select" id="black_player" name="black_player" required>
+                                    <option value="">Select black player</option>
+                                    {% for player in team2_players %}
+                                    <option value="{{ player.username }}">{{ player.username }} (ELO: {{ player.elorating }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="result" class="form-label">Initial Result</label>
+                            <select class="form-select" id="result" name="result" required>
+                                <option value="draw">Draw</option>
+                                <option value="white_win">White Win</option>
+                                <option value="black_win">Black Win</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="black_player" class="form-label">Black Player (Team 2)</label>
-                            <select class="form-select" id="black_player" name="black_player" required>
-                                <option value="">Select black player</option>
-                                {% for player in team2_players %}
-                                <option value="{{ player.username }}">{{ player.username }} (ELO: {{ player.elorating }})</option>
-                                {% endfor %}
-                            </select>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Assign Players</button>
+                            <a href="{{ url_for('matches') }}" class="btn btn-secondary">Cancel</a>
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="result" class="form-label">Initial Result</label>
-                        <select class="form-select" id="result" name="result" required>
-                            <option value="draw">Draw</option>
-                            <option value="white_win">White Win</option>
-                            <option value="black_win">Black Win</option>
-                        </select>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Assign Players</button>
-                        <a href="{{ url_for('matches') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const whiteSelect = document.getElementById('white_player');
+    const blackSelect = document.getElementById('black_player');
+    
+    function validatePlayerSelection() {
+        if (whiteSelect.value && blackSelect.value && whiteSelect.value === blackSelect.value) {
+            alert('A player cannot play against themselves');
+            whiteSelect.value = '';
+            blackSelect.value = '';
+        }
+    }
+    
+    whiteSelect.addEventListener('change', validatePlayerSelection);
+    blackSelect.addEventListener('change', validatePlayerSelection);
+});
+</script>
+{% endblock %}
 {% endblock %} 

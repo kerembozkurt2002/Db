@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}View Halls - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">All Halls</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Hall Name</th>
+                            <th>Country</th>
+                            <th>Total Tables</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hall in halls %}
+                        <tr>
+                            <td>{{ hall.Hall }}</td>
+                            <td>{{ hall.Country }}</td>
+                            <td>{{ hall.Total_Tables }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

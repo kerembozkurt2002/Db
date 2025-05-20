@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Player Statistics - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Player Statistics</h1>
+        <a href="{{ url_for('player_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    <!-- Player Info Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="card-title">Player Information</h5>
+                    <p><strong>Name:</strong> {{ player.name }} {{ player.surname }}</p>
+                    <p><strong>Nationality:</strong> {{ player.nationality }}</p>
+                    <p><strong>FIDE ID:</strong> {{ player.fideid }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="card-title">Current Rating</h5>
+                    <div class="display-4 text-primary">{{ player.elorating }}</div>
+                    <p class="text-muted">ELO Rating</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Matches</h5>
+                    <p class="card-text display-4">{{ total_matches }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Wins</h5>
+                    <p class="card-text display-4">{{ wins }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Draws</h5>
+                    <p class="card-text display-4">{{ draws }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Losses</h5>
+                    <p class="card-text display-4">{{ losses }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance by Color -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">White Performance</h5>
+                    <p><strong>Matches:</strong> {{ white_matches }}</p>
+                    <p><strong>Wins:</strong> {{ white_wins }}</p>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ white_win_rate }}%">
+                            {{ "%.1f"|format(white_win_rate) }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Black Performance</h5>
+                    <p><strong>Matches:</strong> {{ black_matches }}</p>
+                    <p><strong>Wins:</strong> {{ black_wins }}</p>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ black_win_rate }}%">
+                            {{ "%.1f"|format(black_win_rate) }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Win Rate -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Overall Win Rate</h5>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ win_rate }}%">
+                    {{ "%.1f"|format(win_rate) }}%
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

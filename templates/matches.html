@@ -5,7 +5,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Matches</h1>
-    {% if current_user.role in ['admin', 'arbiter'] %}
+    {% if current_user.role in ['admin'] %}
     <a href="{{ url_for('create_match') }}" class="btn btn-primary">Create New Match</a>
     {% endif %}
 </div>
@@ -29,22 +29,30 @@
         <tbody>
             {% for match_data in matches %}
             <tr>
-                <td>{{ match_data.match.match_id }}</td>
-                <td>{{ match_data.match.date.strftime('%Y-%m-%d') }}</td>
-                <td>{{ match_data.match.time_slot.strftime('%H:%M') }}</td>
+                <td>{{ match_data.match_id }}</td>
+                <td>{{ match_data.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ match_data.formatted_time }}</td>
                 <td>{{ match_data.hall_name }}</td>
                 <td>{{ match_data.table_id }}</td>
                 <td>{{ match_data.team1_name }}</td>
                 <td>{{ match_data.team2_name }}</td>
-                <td>{{ match_data.match.arbiter_username }}</td>
-                <td>{{ match_data.match.ratings if match_data.match.ratings else 'Not rated' }}</td>
+                <td>{{ match_data.arbiter_username }}</td>
+                <td>{{ match_data.ratings if match_data.ratings else 'Not rated' }}</td>
                 <td>
                     {% if current_user.role in ['admin', 'arbiter'] %}
-                        {% if not match_data.match.match_assignments %}
-                        <a href="{{ url_for('assign_players', match_id=match_data.match.match_id) }}" class="btn btn-sm btn-info">Assign Players</a>
+                        {# Check if there are match assignments for this match #}
+                        {% set has_assignments = false %}
+                        {% for assignment in match_data.assignments if match_data.assignments is not none %}
+                            {% if assignment.match_id == match_data.match_id %}
+                                {% set has_assignments = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if current_user.role == 'admin' and not has_assignments %}
+                        <a href="{{ url_for('assign_players', match_id=match_data.match_id) }}" class="btn btn-sm btn-info">Assign Players</a>
                         {% endif %}
-                        {% if current_user.username == match_data.match.arbiter_username and not match_data.match.ratings %}
-                        <a href="{{ url_for('submit_rating', match_id=match_data.match.match_id) }}" class="btn btn-sm btn-success">Rate Match</a>
+                        {% if current_user.username == match_data.arbiter_username and not match_data.ratings %}
+                        <a href="{{ url_for('arbiter_rate_match', match_id=match_data.match_id) }}" class="btn btn-sm btn-success">Rate Match</a>
                         {% endif %}
                     {% endif %}
                 </td>

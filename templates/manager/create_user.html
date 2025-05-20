@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Create User - Chess Tournament Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Create New User</h1>
+        <a href="{{ url_for('manager_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" id="createUserForm">
+                <div class="mb-3">
+                    <label for="role" class="form-label">User Role</label>
+                    <select class="form-select" id="role" name="role" required onchange="showRoleFields()">
+                        <option value="">Select a role</option>
+                        <option value="player">Player</option>
+                        <option value="coach">Coach</option>
+                        <option value="arbiter">Arbiter</option>
+                    </select>
+                </div>
+
+                <!-- Common fields for all roles -->
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="surname" class="form-label">Surname</label>
+                    <input type="text" class="form-control" id="surname" name="surname" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nationality" class="form-label">Nationality</label>
+                    <input type="text" class="form-control" id="nationality" name="nationality" required>
+                </div>
+
+                <!-- Player-specific fields -->
+                <div id="playerFields" style="display: none;">
+                    <div class="mb-3">
+                        <label for="dateofbirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateofbirth" name="dateofbirth">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="elorating" class="form-label">ELO Rating</label>
+                        <input type="number" class="form-control" id="elorating" name="elorating">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fideid" class="form-label">FIDE ID</label>
+                        <input type="text" class="form-control" id="fideid" name="fideid">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="titleid" class="form-label">Title</label>
+                        <select class="form-select" id="titleid" name="titleid">
+                            <option value="">Select a title</option>
+                            {% for title in titles %}
+                            <option value="{{ title.title_id }}">{{ title.title_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="team_list" class="form-label">Team List</label>
+                        <input type="text" class="form-control" id="team_list" name="team_list">
+                    </div>
+                </div>
+
+                <!-- Coach-specific fields -->
+                <div id="coachFields" style="display: none;">
+                    <div class="mb-3">
+                        <label for="team_id" class="form-label">Team</label>
+                        <select class="form-select" id="team_id" name="team_id">
+                            <option value="">Select a team</option>
+                            {% for team in teams %}
+                            <option value="{{ team.team_id }}">{{ team.team_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contract_start" class="form-label">Contract Start Date</label>
+                        <input type="date" class="form-control" id="contract_start" name="contract_start">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contract_finish" class="form-label">Contract End Date</label>
+                        <input type="date" class="form-control" id="contract_finish" name="contract_finish">
+                    </div>
+                </div>
+
+                <!-- Arbiter-specific fields -->
+                <div id="arbiterFields" style="display: none;">
+                    <div class="mb-3">
+                        <label for="experience_level" class="form-label">Experience Level</label>
+                        <select class="form-select" id="experience_level" name="experience_level">
+                            <option value="">Select experience level</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create User</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function showRoleFields() {
+    const role = document.getElementById('role').value;
+    
+    // Hide all role-specific fields
+    document.getElementById('playerFields').style.display = 'none';
+    document.getElementById('coachFields').style.display = 'none';
+    document.getElementById('arbiterFields').style.display = 'none';
+    
+    // Show fields for selected role
+    if (role === 'player') {
+        document.getElementById('playerFields').style.display = 'block';
+    } else if (role === 'coach') {
+        document.getElementById('coachFields').style.display = 'block';
+    } else if (role === 'arbiter') {
+        document.getElementById('arbiterFields').style.display = 'block';
+    }
+}
+</script>
+{% endblock %} 
